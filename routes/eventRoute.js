@@ -8,4 +8,9 @@ const {
   deleteEvent
 } = require('../controllers/eventContoller');
 
-router = Router();
+const router = Router();
+
+router.post('/event', createEvent);
+router.get('/event/:id', getSingleEvent);
+
+module.exports = router;

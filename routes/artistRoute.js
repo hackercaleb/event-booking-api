@@ -13,3 +13,5 @@ const {
 const router = Router();
 
 router.post('/artist', createArtist);
+
+module.exports = router;
