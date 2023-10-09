@@ -1,11 +1,11 @@
 const artistSchema = new mongoose.Schema({
   name: {
     type: String,
-    required: true
+    required: [true, 'Please tell us your name']
   },
   email: {
     type: String,
-    required: true,
+    required: [true, ' please provide your email'],
     unique: true
   },
   password: {

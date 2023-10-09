@@ -1,3 +1,5 @@
+const { default: mongoose } = require('mongoose');
+
 const eventSchema = new mongoose.Schema({
   title: {
     type: String,
@@ -26,3 +28,7 @@ const eventSchema = new mongoose.Schema({
   }
   // You can add more event-related fields here
 });
+
+const Event = mongoose.model('Event', eventSchema);
+
+module.exports = Events;
