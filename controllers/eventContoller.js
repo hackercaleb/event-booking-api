@@ -36,22 +36,7 @@ exports.getSingleEvent = catchAsync(async (req, res, next) => {
   });
 });
 
-/*exports.getSingleEvent = catchAsync(async (req, res, next) => {
-  const { id } = req.params;
-  const event = await Event.findById(id);
-  if (!event) {
-    return next(new AppError('No  Event found with that id', 404));
-  }
-
-  res.status(200).json({
-    status: 'success',
-    data: {
-      event
-    }
-  });
-});*/
-
-/*exports.updateEvent = catchAsync(async (req, res, next) => {
+exports.updateEvent = catchAsync(async (req, res, next) => {
   if (!event) {
     return next(new AppError('No  Event found with that id', 404));
   }
@@ -81,4 +66,3 @@ exports.deleteEvent = catchAsync(async (req, res, next) => {
     message: 'Event deleted successfully'
   };
 });
-*/

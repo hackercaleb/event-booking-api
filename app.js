@@ -1,6 +1,5 @@
 const express = require('express');
 const mongoose = require('mongoose');
-const connectDB = require('./db');
 const AppError = require('./utils/apperror');
 const globalErrorHandler = require('./controllers/errorcontroller');
 const routes = require('./routes');
@@ -8,12 +7,6 @@ const Event = require('./model/eventmodel');
 const { Error } = require('mongoose');
 
 const app = express();
-
-const PORT = 3009;
-
-connectDB();
-
-app.listen(PORT, () => console.log(`Server started, listening at port ${PORT}`));
 
 app.use(express.json());
 app.use('/', routes);
@@ -32,3 +25,5 @@ app.all('*', (req, res, next) => {
 });
 
 app.use(globalErrorHandler);
+
+module.exports = app;
