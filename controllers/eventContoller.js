@@ -3,9 +3,7 @@ const AppError = require('../utils/apperror');
 const catchAsync = require('../utils/catchAsync');
 
 exports.createEvent = catchAsync(async (req, res, next) => {
-  const { title, artist, date, location, description } = req.body;
-
-  await Event.create({ title, artist, date, location, description });
+  await Event.create(req.body);
 
   res.status(201).json({
     message: 'Event created successfully',
@@ -17,7 +15,14 @@ exports.createEvent = catchAsync(async (req, res, next) => {
   });
 });
 
-exports.getllLevent = catchAsync(async (req, res, next) => {});
+exports.getllevent = catchAsync(async (req, res, next) => {
+  res.status(200).json({
+    status: 'success',
+    data: {
+      event
+    }
+  });
+});
 
 exports.getSingleEvent = catchAsync(async (req, res, next) => {
   const { id } = req.params;
