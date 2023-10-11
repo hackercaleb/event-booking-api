@@ -21,4 +21,6 @@ router.post('/artist/login', login);
 
 router.get('/artists', getAllArtist);
 
+router.get('/artist/:id', getSingleArtist);
+
 module.exports = router;

@@ -31,6 +31,7 @@ const artistSchema = new mongoose.Schema({
       message: 'passwords are not the same'
     }
   },
+  changedPasswordAt: Date,
   genre: [
     {
       type: String,
@@ -53,6 +54,16 @@ artistSchema.pre('save', async function (next) {
 
 artistSchema.methods.correctPassword = async function (candidatePassword, userPassword) {
   return await bcrypt.compare(candidatePassword, userPassword);
+};
+
+artistSchema.methods.changedPasswordAfter = function (JWTTimestamp) {
+  if (this.changedPasswordAt) {
+    const changedTimeStamp = parseInt(this.changedPasswordAt.getTime() / 1000, 10);
+    return JWTTimestamp < changedTimeStamp;
+  }
+
+  // false means not changed
+  return false;
 };
 
 const Artist = mongoose.model('Artist', artistSchema);

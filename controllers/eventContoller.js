@@ -3,14 +3,16 @@ const AppError = require('../utils/apperror');
 const catchAsync = require('../utils/catchAsync');
 
 exports.createEvent = catchAsync(async (req, res, next) => {
-  await Event.create(req.body);
+  const artistId = req.artist.id;
+
+  const { title, location, date, description, artist } = req.body;
+
+  const event = await Event.create({ title, location, date, description, artist: artistId });
 
   res.status(201).json({
     message: 'Event created successfully',
     data: {
-      title,
-      location,
-      date
+      event
     }
   });
 });
