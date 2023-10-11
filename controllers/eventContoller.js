@@ -17,11 +17,26 @@ exports.createEvent = catchAsync(async (req, res, next) => {
   });
 });
 
-exports.getllevent = catchAsync(async (req, res, next) => {
+exports.getAllEvent = catchAsync(async (req, res, next) => {
+  // find all the events in the database
+  const events = await Event.find().populate('artist', 'id name');
+
+  //prepare the response
+  const eventResponse = events.map((event) => {
+    return {
+      id: event._id,
+      title: event.title,
+      artist: { id: event.artist._id, name: event.artist.name },
+      location: event.location,
+      date: event.date,
+      description: event.description
+    };
+  });
+
   res.status(200).json({
     status: 'success',
     data: {
-      event
+      eventResponse
     }
   });
 });

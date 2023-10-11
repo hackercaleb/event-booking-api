@@ -2,7 +2,7 @@ const { Router } = require('express');
 
 const {
   createEvent,
-  getALLevent,
+  getAllEvent,
   getSingleEvent,
   updateEvent,
   deleteEvent
@@ -14,5 +14,6 @@ const router = Router();
 
 router.post('/event', protect, createEvent);
 router.get('/event/:id', getSingleEvent);
+router.get('/events', getAllEvent);
 
 module.exports = router;
