@@ -15,5 +15,7 @@ const router = Router();
 router.post('/event', protect, createEvent);
 router.get('/event/:id', getSingleEvent);
 router.get('/events', getAllEvent);
+router.put();
+router.delete();
 
 module.exports = router;

@@ -8,7 +8,7 @@ const {
   deleteArtist
 } = require('../controllers/artistcontroller');
 
-const { signup, login } = require('../controllers/authcontroller');
+const { signup, login, updatePassword } = require('../controllers/authcontroller');
 
 const { arrayValidatorRules } = require('../middleware/arrayValidator');
 const { validate } = require('../middleware/validate');
@@ -22,5 +22,10 @@ router.post('/artist/login', login);
 router.get('/artists', getAllArtist);
 
 router.get('/artist/:id', getSingleArtist);
+
+router.get();
+router.put();
+router.put('/updatePassword', protect, updatePassword);
+router.delete();
 
 module.exports = router;

@@ -44,9 +44,13 @@ exports.login = catchAsync(async (req, res, next) => {
   // if everything is okay , send the  token  to the client
 
   const token = signToken(artist._id);
-  res.status(201).json({
+
+  res.status(200).json({
     status: 'success',
-    token
+    token,
+    data: {
+      artist
+    }
   });
 });
 
@@ -85,7 +89,7 @@ exports.protect = catchAsync(async (req, res, next) => {
 });
 
 exports.updatePassword = catchAsync(async (req, res, next) => {
-  // get the user from the collextion
+  // get the user from the collection
   const artist = await Artist.findById(req.artist.id).select('+password');
   //check if the posted password is correct
 
@@ -98,4 +102,15 @@ exports.updatePassword = catchAsync(async (req, res, next) => {
 
   await artist.save();
   // login user
+
+  // Automatic login
+  const token = signToken({ id: artist._id });
+
+  res.status(200).json({
+    status: 'success',
+    token,
+    data: {
+      artist
+    }
+  });
 });

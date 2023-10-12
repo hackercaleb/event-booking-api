@@ -1,3 +1,4 @@
+const { findByIdAndDelete } = require('../model/artistmodel');
 const Event = require('../model/eventmodel');
 const AppError = require('../utils/apperror');
 const catchAsync = require('../utils/catchAsync');
@@ -59,32 +60,61 @@ exports.getSingleEvent = catchAsync(async (req, res, next) => {
 });
 
 exports.updateEvent = catchAsync(async (req, res, next) => {
+  //extract artist id from the token
+  const artistId = req.artist.id;
+
+  //find the event by id
+  const event = await Event.findById(req.params.id);
   if (!event) {
     return next(new AppError('No  Event found with that id', 404));
   }
-  const requestBody = {
-    title: 'Boomplay',
-    location: 'Lagos',
-    date: '2023-09-27T14:30:00',
-    description: 'This is a description'
-  };
 
-  const response = {
+  // Check if the logged-in artist is the creator of the event
+  if (event.artist.toString() !== artistId) {
+    return next(new AppError('You are not authorized to update this event', 403));
+  }
+
+  //update only the fields that are present in the request body
+
+  const allowedField = ['name', 'date', 'location', 'description'];
+  allowedField.forEach((field) => {
+    if (req.body[field] !== undefined) {
+      event[field] === req.body[field];
+    }
+  });
+
+  // Save the updated event
+  await event.save();
+  // Assuming the update was successful
+  res.status(200).json({
+    status: 'success',
     message: 'Event updated successfully',
     data: {
-      id: 1,
-      title: 'Boomplay',
-      location: 'Lagos',
-      date: '2023-09-27T14:30:00'
+      event
     }
-  };
+  });
 });
 
 exports.deleteEvent = catchAsync(async (req, res, next) => {
+  //extract id from token
+  const artistId = req.artist.id;
+
+  //find event in the database
+  const event = await Event.findById(req.params.id);
+
+  //check if it is in the database
   if (!event) {
     return next(new AppError('No  Event found with that id', 404));
   }
-  const response = {
+
+  // Check if the logged-in artist is the creator of the event
+  if (event.artist.toString() !== artistId) {
+    return next(new AppError('You are not authorized to delete this event', 403));
+  }
+
+  await findByIdAndDelete(event);
+
+  res.status(200).json({
     message: 'Event deleted successfully'
-  };
+  });
 });
