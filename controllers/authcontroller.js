@@ -13,6 +13,7 @@ const signToken = (id) => {
 exports.signup = catchAsync(async (req, res, next) => {
   const { name, email, password, passwordConfirm, genre, bio } = req.body;
   const newArtist = await Artist.create({ name, email, password, passwordConfirm, genre, bio });
+  console.log('New artist ID:', newArtist._id);
 
   // Automatic login
   const token = signToken({ id: newArtist._id });
@@ -53,9 +54,9 @@ exports.login = catchAsync(async (req, res, next) => {
     }
   });
 });
-
 exports.protect = catchAsync(async (req, res, next) => {
   //get token and check if it exist
+  console.log('Protect middleware entered');
 
   let token;
 
@@ -72,7 +73,10 @@ exports.protect = catchAsync(async (req, res, next) => {
   console.log(decoded);
   // check if user still exist
 
-  const currentUser = await Artist.findById(decoded.id);
+  const currentUser = await Artist.findById(decoded.id.id);
+
+  console.log('Token decoded:', decoded);
+  console.log('Current user:', currentUser);
 
   if (!currentUser) {
     return next(new AppError('the user does not longer exist', 401));
@@ -84,8 +88,9 @@ exports.protect = catchAsync(async (req, res, next) => {
   }
 
   //grant access to protected routes,
-  //req.user = decoded
-  (req.artist = currentUser), next();
+
+  req.artist = currentUser;
+  next();
 });
 
 exports.updatePassword = catchAsync(async (req, res, next) => {

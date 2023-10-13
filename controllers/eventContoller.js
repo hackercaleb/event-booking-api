@@ -1,4 +1,4 @@
-const { findByIdAndDelete } = require('../model/artistmodel');
+const Artist = require('../model/artistmodel');
 const Event = require('../model/eventmodel');
 const AppError = require('../utils/apperror');
 const catchAsync = require('../utils/catchAsync');
@@ -79,7 +79,7 @@ exports.updateEvent = catchAsync(async (req, res, next) => {
   const allowedField = ['name', 'date', 'location', 'description'];
   allowedField.forEach((field) => {
     if (req.body[field] !== undefined) {
-      event[field] === req.body[field];
+      event[field] = req.body[field];
     }
   });
 
@@ -112,7 +112,7 @@ exports.deleteEvent = catchAsync(async (req, res, next) => {
     return next(new AppError('You are not authorized to delete this event', 403));
   }
 
-  await findByIdAndDelete(event);
+  await Event.findByIdAndDelete(req.params.id);
 
   res.status(200).json({
     message: 'Event deleted successfully'
