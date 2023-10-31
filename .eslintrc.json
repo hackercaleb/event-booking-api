@@ -1,4 +1,5 @@
 {
+<<<<<<< HEAD
   "env": {
     "browser": true,
     "commonjs": true,
@@ -23,4 +24,33 @@
     "quotes": "off",
     "spaced-comment": "off"
   }
+=======
+    "env": {
+        "browser": true,
+        "commonjs": true,
+        "es2021": true
+    },
+    "extends": "airbnb-base",
+    "overrides": [
+    ],
+    "parserOptions": {
+        "ecmaVersion": "latest"
+    },
+    "rules": {
+        "linebreak-style": "off",
+        "no-console": "off",
+        "comma-dangle": "off",
+        "no-unused-vars": "off",
+        "indent": "off",
+        "object-curly-newline": "off",
+        "guard-for-in": "off",
+        "operator-linebreak": "off",
+        "no-loop-func": "off",
+        "no-restricted-syntax": "off",
+        "arrow-parens": "off",
+        "quotes": "off",
+        "spaced-comment": "off",
+        "no-underscore-dangle": "off"
+    }
+>>>>>>> 92fa62cfb07920aeb5eaa066056a5c85fb417c1b
 }

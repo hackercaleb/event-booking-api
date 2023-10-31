@@ -1,4 +1,3 @@
-const { JsonWebTokenError } = require('jsonwebtoken');
 const AppError = require('../utils/apperror');
 
 const handleCastErrorDB = (err) => {

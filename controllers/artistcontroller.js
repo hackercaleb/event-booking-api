@@ -1,4 +1,5 @@
 const Artist = require('../model/artistmodel');
+const Event = require('../model/eventmodel');
 const catchAsync = require('../utils/catchAsync');
 const AppError = require('../utils/apperror');
 
@@ -111,7 +112,7 @@ exports.deleteArtist = catchAsync(async (req, res, next) => {
 
   // delete artist and event associated
   await Artist.findByIdAndDelete(artistId);
-  await Event.deleteMany({ artist: artistId });
+  await Event.deleteMany(artistId);
   //send response
   res.status(200).json({
     status: 'success',
