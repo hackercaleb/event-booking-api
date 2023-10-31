@@ -20,6 +20,7 @@
     "no-loop-func": "off",
     "no-restricted-syntax": "off",
     "arrow-parens": "off",
-    "quotes": "off"
+    "quotes": "off",
+    "spaced-comment": "off"
   }
 }

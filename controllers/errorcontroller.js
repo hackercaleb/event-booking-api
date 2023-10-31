@@ -46,7 +46,7 @@ const sendErrorProd = (err, res) => {
 
   //programming and other errors
   else {
-    //log error
+    //log erro
 
     console.error('error', err);
 
