@@ -1,5 +1,5 @@
 const { Router } = require('express');
-const artistRoute = require('../routes/artistRoute');
+const artistRoute = require('./artistRoute');
 const eventRoute = require('./eventRoute');
 
 const router = Router();

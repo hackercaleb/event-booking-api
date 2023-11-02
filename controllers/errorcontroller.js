@@ -9,7 +9,7 @@ const handleDuplicateFieldsDB = (err) => {
   const value = err.errmsg.match(/(["'])(\\?.)*?\1/)[0];
   console.log(value);
 
-  const message = ` Duplicate fields value: ${value} please use another value ${errors.join('. ')}
+  const message = ` Duplicate fields value: ${value} please use another value ${err.join('. ')}
   `;
 
   return new AppError(message, 400);
@@ -41,12 +41,7 @@ const sendErrorProd = (err, res) => {
       status: err.status,
       message: err.message
     });
-  }
-
-  //programming and other errors
-  else {
-    //log erro
-
+  } else {
     console.error('error', err);
 
     // send message

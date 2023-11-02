@@ -23,16 +23,14 @@ exports.getAllEvent = catchAsync(async (req, res, next) => {
   const events = await Event.find().populate('artist', 'id name');
 
   //prepare the response
-  const eventResponse = events.map((event) => {
-    return {
-      id: event._id,
-      title: event.title,
-      artist: { id: event.artist._id, name: event.artist.name },
-      location: event.location,
-      date: event.date,
-      description: event.description
-    };
-  });
+  const eventResponse = events.map((event) => ({
+    id: event._id,
+    title: event.title,
+    artist: { id: event.artist._id, name: event.artist.name },
+    location: event.location,
+    date: event.date,
+    description: event.description
+  }));
 
   res.status(200).json({
     status: 'success',
@@ -51,7 +49,7 @@ exports.getSingleEvent = catchAsync(async (req, res, next) => {
     return next(new AppError('No Event found with that id', 404));
   }
 
-  res.status(200).json({
+  return res.status(200).json({
     status: 'success',
     data: {
       event
@@ -76,7 +74,7 @@ exports.updateEvent = catchAsync(async (req, res, next) => {
 
   //update only the fields that are present in the request body
 
-  const allowedField = ['name', 'date', 'location', 'description'];
+  const allowedField = ['title', 'date', 'location', 'description'];
   allowedField.forEach((field) => {
     if (req.body[field] !== undefined) {
       event[field] = req.body[field];
@@ -86,7 +84,7 @@ exports.updateEvent = catchAsync(async (req, res, next) => {
   // Save the updated event
   await event.save();
   // Assuming the update was successful
-  res.status(200).json({
+  return res.status(200).json({
     status: 'success',
     message: 'Event updated successfully',
     data: {
@@ -114,7 +112,7 @@ exports.deleteEvent = catchAsync(async (req, res, next) => {
 
   await Event.findByIdAndDelete(req.params.id);
 
-  res.status(200).json({
+  return res.status(200).json({
     message: 'Event deleted successfully'
   });
 });

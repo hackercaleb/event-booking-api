@@ -4,7 +4,8 @@ const Artist = require('../model/artistmodel');
 const catchAsync = require('../utils/catchAsync');
 const AppError = require('../utils/apperror');
 
-const signToken = (id) => jwt.sign({ id }, process.env.JWT_SECRET, {
+const signToken = (id) =>
+  jwt.sign({ id }, process.env.JWT_SECRET, {
     expiresIn: process.env.JWT_EXPIRES_IN
   });
 
@@ -88,7 +89,7 @@ exports.protect = catchAsync(async (req, res, next) => {
   //grant access to protected routes,
 
   req.artist = currentUser;
-  next();
+  return next();
 });
 
 exports.updatePassword = catchAsync(async (req, res, next) => {

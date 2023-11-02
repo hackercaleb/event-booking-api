@@ -32,7 +32,7 @@ exports.getSingleArtist = catchAsync(async (req, res, next) => {
   }
 
   //return response
-  res.status(200).json({
+  return res.status(200).json({
     status: 'success',
     data: {
       id: artist._id,
@@ -56,7 +56,7 @@ exports.getArtistProfile = catchAsync(async (req, res, next) => {
   }
 
   // Respond with the artist's information
-  res.status(200).json({
+  return res.status(200).json({
     status: 'success',
     data: { artist }
   });
@@ -84,7 +84,7 @@ exports.updateArtist = catchAsync(async (req, res, next) => {
     });
 
     // Send response
-    res.status(200).json({
+    return res.status(200).json({
       status: 'success',
       data: {
         artist: updatedArtist
@@ -92,7 +92,7 @@ exports.updateArtist = catchAsync(async (req, res, next) => {
     });
   } catch (error) {
     // Handle errors, including potential CastErrors
-    return next(new AppError('Error updating artist: ' + error.message, 500));
+    return next(new AppError(`Error updating artist: ${error.message}`, 500));
   }
 });
 
@@ -112,9 +112,9 @@ exports.deleteArtist = catchAsync(async (req, res, next) => {
 
   // delete artist and event associated
   await Artist.findByIdAndDelete(artistId);
-  await Event.deleteMany(artistId);
+  await Event.deleteMany({ artist: artistId });
   //send response
-  res.status(200).json({
+  return res.status(200).json({
     status: 'success',
     message: 'Artist deleted successfully'
   });

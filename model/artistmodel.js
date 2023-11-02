@@ -25,7 +25,7 @@ const artistSchema = new mongoose.Schema({
     type: String,
     required: [true, 'please provide your password'],
     validate: {
-      validator: function (el) {
+      validator(el) {
         return el === this.password;
       },
       message: 'passwords are not the same'
@@ -42,6 +42,7 @@ const artistSchema = new mongoose.Schema({
   // You can add more artist-related fields here
 });
 
+// eslint-disable-next-line func-names
 artistSchema.pre('save', async function (next) {
   if (!this.isModified('password')) return next();
 
@@ -49,13 +50,15 @@ artistSchema.pre('save', async function (next) {
 
   this.passwordConfirm = undefined;
 
-  next();
+  return next();
 });
 
+// eslint-disable-next-line func-names
 artistSchema.methods.correctPassword = async function (candidatePassword, userPassword) {
-  return await bcrypt.compare(candidatePassword, userPassword);
+  return bcrypt.compare(candidatePassword, userPassword);
 };
 
+// eslint-disable-next-line func-names
 artistSchema.methods.changedPasswordAfter = function (JWTTimestamp) {
   if (this.changedPasswordAt) {
     const changedTimeStamp = parseInt(this.changedPasswordAt.getTime() / 1000, 10);
