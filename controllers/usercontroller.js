@@ -48,4 +48,3 @@ exports.getSingleUser = catchAsync(async (req, res, next) => {
     data: { id: user._id, name: user.name, email: user.email }
   });
 });
-//caleb
