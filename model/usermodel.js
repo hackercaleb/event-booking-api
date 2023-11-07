@@ -39,5 +39,9 @@ userSchema.pre('save', async function calca(next) {
   return next();
 });
 
+userSchema.methods.correctPassword = async function (candidatePassword, userPassword) {
+  return bcrypt.compare(candidatePassword, userPassword);
+};
+
 const User = mongoose.model('User', userSchema);
 module.exports = User;
