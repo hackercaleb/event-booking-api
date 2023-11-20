@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 const Event = require('../model/eventmodel');
 const Booking = require('../model/bookingmodel');
 const sendEmail = require('../utils/sendEmail');
@@ -29,3 +30,6 @@ const createBooking = catchAsync(async (req, res, next) => {
     return next(new AppError('User already booked fot this event'));
   }
 });
+=======
+const nodemailer = require('nodemailer');
+>>>>>>> cfbe763e342fba1ed0c2311866ae49fe901b9f23
