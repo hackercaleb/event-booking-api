@@ -1,13 +1,13 @@
 const Event = require('../model/eventmodel');
 const Booking = require('../model/bookingmodel');
-const { protectUser } = require('./authcontroller');
+//const { protectUser } = require('./authcontroller');
 
 const sendEmail = require('../utils/sendEmail');
 const catchAsync = require('../utils/catchAsync');
 const AppError = require('../utils/apperror');
 
 const createBooking = catchAsync(async (req, res, next) => {
-  const { id } = req.user;
+  //const { id } = req.user;
   const { eventId } = req.body;
 
   // check if eventId is provided
@@ -42,9 +42,9 @@ const createBooking = catchAsync(async (req, res, next) => {
   // send email to the user
   try {
     await sendEmail({
-      email: req.user.email, // Assuming you have user email in req.user
+      email: req.user.email,
       subject: 'Event Booking Confirmation',
-      message: `You have successfully booked ${eventExist.name}. Event details: ${JSON.stringify(
+      message: `You have successfully booked ${eventExist.title}. Event details: ${JSON.stringify(
         eventExist
       )}`
     });
