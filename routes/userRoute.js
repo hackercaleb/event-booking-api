@@ -4,7 +4,8 @@ const {
   getSingleUser,
   getCurrentUser,
   deleteUser,
-  updateUser
+  updateUser,
+  userRecommendation
 } = require('../controllers/usercontroller');
 const { createUser, loginUser } = require('../controllers/authcontroller');
 
@@ -19,6 +20,7 @@ router.post('/users/login', loginUser);
 router.get('/users', getAllUsers);
 router.get('/users/me', protectUser, getCurrentUser); // Assuming a route for fetching the profile of the currently logged-in artist
 router.get('/users/:id', getSingleUser);
+router.get('/user/userrecommendation', protectUser, userRecommendation);
 
 router.put('/user', protectUser, updateUser);
 

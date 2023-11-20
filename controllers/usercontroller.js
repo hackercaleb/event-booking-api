@@ -1,7 +1,51 @@
 const User = require('../model/usermodel');
 const Artist = require('../model/artistmodel');
+const Event = require('../model/eventmodel');
+
 const catchAsync = require('../utils/catchAsync');
 const AppError = require('../utils/apperror');
+
+const userHasFavourite = (user) =>
+  (user && user.favouriteArtist && user.favouriteArtist.length > 0) ||
+  (user && user.favouriteGenre && user.favouriteGenre.length > 0);
+
+const filterEvent = async (user) => {
+  // Query the database to find events matching favorite artists or genres
+  const events = await Event.find({
+    $or: [
+      { 'artist.id': { $in: user.favouriteArtists || [] } },
+      { genre: { $in: user.favouriteGenres || [] } }
+    ]
+  }).exec();
+
+  return events;
+};
+
+const shuffleEvent = (array) => {
+  for (let i = array.length - 1; i > 0; i--) {
+    const j = Math.floor(Math.random() * (i + 1));
+    [array[i], array[j]] = [array[j], array[i]];
+  }
+  return array;
+};
+
+exports.userRecommendation = catchAsync(async (req, res, next) => {
+  const userId = req.user.id;
+  //const { favouriteArtists, favouriteGenres } = req.user;
+  const queryObj = req.query;
+  // Check if the user has favourite artists or genres
+  if (!userHasFavourite(req.user)) {
+    return next(new AppError('Please update your records with favorite artists and genres.', 200));
+  }
+
+  // Retrieve events based on user preferences
+  const filteredEvents = (await filterEvent(req.user)) || [];
+  const limit = parseInt(req.query.limit, 10) || 5;
+  const shuffledEvents = shuffleEvent(filteredEvents).slice(0, limit);
+
+  // Return the response
+  return res.json(shuffledEvents);
+});
 
 exports.getAllUsers = catchAsync(async (req, res, next) => {
   const users = await User.find();
