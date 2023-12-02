@@ -26,35 +26,3 @@ const sendEmail = async (options) => {
 };
 
 module.exports = sendEmail;
-
-/*
-// eslint-disable-next-line import/no-extraneous-dependencies
-const { createTransport } = require('nodemailer');
-
-const sendEmail = async (options) => {
-  try {
-    // Create a transporter
-    const transporter = createTransport({
-      host: process.env.EMAIL_HOST,
-      port: process.env.EMAIL_PORT,
-      auth: { user: process.env.EMAIL_USERNAME, pass: process.env.EMAIL_PASSWORD }
-    });
-
-    // Define email options
-    const mailOptions = {
-      from: options.from || `Caleb Oshalusi <${process.env.EMAIL_USERNAME}>`,
-      to: options.email,
-      subject: options.subject,
-      text: options.message
-    };
-
-    // Actually send the email
-    await transporter.sendMail(mailOptions);
-  } catch (error) {
-    console.error('Error sending email:', error);
-  }
-};
-
-module.exports = sendEmail;
-
-*/

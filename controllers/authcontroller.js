@@ -151,7 +151,7 @@ exports.protectUser = catchAsync(async (req, res, next) => {
 
   // validate the token
   const decoded = await promisify(jwt.verify)(token, process.env.JWT_SECRET);
-
+  console.log('Decoded Token:', decoded);
   // check if decoded.id is a valid ObjectId
   if (!mongoose.Types.ObjectId.isValid(decoded.id)) {
     return next(new AppError('Invalid user ID in token', 400));

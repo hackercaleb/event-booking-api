@@ -120,3 +120,33 @@ exports.getBookings = catchAsync(async (req, res, next) => {
     });
   }
 });
+
+exports.getSingleBookings = catchAsync(async (req, res, next) => {
+  const { id } = req.params;
+  const booking = await Booking.findById(id);
+  if (!booking) {
+    return next(new AppError('Booking does not exist', 404));
+  }
+
+  //return response
+
+  return res.status(200).json({ status: 'success', data: booking });
+});
+
+exports.deleteBookings = catchAsync(async (req, res, next) => {
+  const { id } = req.user;
+  const { bookingId } = req.params;
+  //check if the booking exist
+  const booking = await Booking.findById(bookingId);
+  if (!booking) {
+    return next(new AppError('booking does not exist', 404));
+  }
+
+  //check if the user is the owner of the bookings
+  if (booking.user.toString() !== id) {
+    return next(new AppError('you are not authorised to delete.you are not the owner', 403));
+  }
+
+  await Booking.findByIdAndDelete(bookingId);
+  return res.status(200).json({ message: 'data deleted successfully' });
+});
