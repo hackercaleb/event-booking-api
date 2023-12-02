@@ -21,7 +21,7 @@ const userSchema = new mongoose.Schema({
     select: false
   },
   favouriteGenres: [String],
-  favoriteArtists: [
+  favouriteArtists: [
     {
       type: mongoose.Schema.Types.ObjectId,
       ref: 'Artist'

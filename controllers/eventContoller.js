@@ -1,12 +1,15 @@
 const Artist = require('../model/artistmodel');
+const Booking = require('../model/bookingmodel');
+
 const Event = require('../model/eventmodel');
 const AppError = require('../utils/apperror');
 const catchAsync = require('../utils/catchAsync');
+const sendEmail = require('../utils/sendEmail');
 
 exports.createEvent = catchAsync(async (req, res, next) => {
   const artistId = req.artist.id;
 
-  const { title, location, date, description, artist } = req.body;
+  const { title, location, date, description, artist, genre } = req.body;
 
   const event = await Event.create({ title, location, date, description, artist: artistId });
 
@@ -93,26 +96,67 @@ exports.updateEvent = catchAsync(async (req, res, next) => {
   });
 });
 
+// Your deleteEvent function
 exports.deleteEvent = catchAsync(async (req, res, next) => {
-  //extract id from token
+  // Extract artist id from the token
   const artistId = req.artist.id;
 
-  //find event in the database
-  const event = await Event.findById(req.params.id);
+  // Find event in the database
+  const event = await Event.findById(req.params.id).populate('bookedUsers');
 
-  //check if it is in the database
+  // Check if the event exists
   if (!event) {
-    return next(new AppError('No  Event found with that id', 404));
+    return next(new AppError('No Event found with that id', 404));
   }
 
   // Check if the logged-in artist is the creator of the event
   if (event.artist.toString() !== artistId) {
-    return next(new AppError('You are not authorized to delete this event', 403));
+    return next(new AppError('You are not authorized to cancel this event', 403));
   }
 
-  await Event.findByIdAndDelete(req.params.id);
+  // Function to cancel an event and send emails to booked users
+  const cancelEventAndNotifyUsers = async (eventId) => {
+    try {
+      // Find the event by its ID
+      // const event = await Event.findById(eventId);
 
-  return res.status(200).json({
-    message: 'Event deleted successfully'
-  });
+      // Check if the event exists and is not already canceled
+      if (event && event.status !== 'cancelled') {
+        // Update the event status to 'cancelled'
+        event.status = 'cancelled';
+        await event.save();
+
+        // Find all bookings for the canceled event
+        const bookings = await Booking.find({ event: eventId }).populate('user');
+
+        // Use map to create an array of promises for sending emails
+        const emailPromises = bookings.map(async (booking) => {
+          try {
+            await sendEmail({
+              email: booking.user.email,
+              subject: 'Event Cancellation Confirmation',
+              message: `The event "${
+                event.title
+              }" scheduled on ${event.date.toDateString()} has been cancelled. We apologize for any inconvenience.`
+            });
+          } catch (error) {
+            console.error(`Error sending cancellation email to ${booking.user.email}:`, error);
+            // Handle email sending error, maybe log it or retry
+          }
+        });
+
+        // Use Promise.all to wait for all emails to be sent
+        await Promise.all(emailPromises);
+
+        return res.status(200).json({ message: 'Event successfully deleted' });
+      }
+      return res.status(200).json({ message: 'Event is already cancelled' });
+    } catch (error) {
+      console.error('Error cancelling event:', error);
+      return res.status(500).json({ error: 'Internal Server Error' });
+    }
+  };
+
+  // Call the cancelEventAndNotifyUsers function with the event ID
+  await cancelEventAndNotifyUsers(req.params.id);
 });
